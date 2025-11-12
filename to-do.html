@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8">
+  <title>to do list</title>
+  <style>
+  header{
+    display:flex;
+    justify-content:space-between;
+    padding:0 30px;
+  }
+  .button1{
+    width:97%;
+    padding:20px 0;
+    font-size:30px;
+    background:rgba(0,0,0,0.2);
+    position:relative;
+  }
+  .button1.act-btn{
+    background:red;
+    color:white;
+  }
+    
+  .container{
+    background:rgba(0,0,0,0.1);
+    width:80%;
+    margin:100px auto 5px;
+    padding: 10px 20px 25px;
+    border-radius:20px;
+    
+  }
+  .input{
+    display:flex;
+  }
+  #input{
+      flex:1;
+      padding:10px ;
+      font-size:20px;
+      border-radius:6px;
+      border:2px solid black;
+      outline:none;
+    }
+    .button{
+      padding:0 15px;
+      margin-left:-10px;
+      background:orange;
+      color:white;
+      border-radius:6px;
+      border:none;
+      cursor:pointer;
+    }
+    ul{
+      list-style:none;
+    }
+    
+    #list li{
+      border-radius:15px;
+      margin:10px ;
+      padding:10px;
+      cursor:pointer;
+      font-size:20px;
+    }
+    #list li::before{
+      content :"⭕️"
+    }
+    #list li span{
+      float:right;
+      font-size:45px;
+      margin-top:-20px;
+      color:red;
+      cursor:pointer;
+      padding:0 5px;
+    }
+    #list li.done::before{
+      content :"✔️"
+    }
+    #list li.done{
+      text-decoration:line-through;
+      background:lightgreen;
+    }
+  .con{
+    display:none;
+  }
+  .active{
+    display:block;
+  }
+  #note .container{
+    margin:20px auto;
+  }
+  #create{
+    padding:10px 25px;
+    border-radius:40px;
+    font-size:22px;
+    margin:10px 30px -34px;
+    background:rgba(10,250,100);
+    border:none;
+    cursor:pointer;
+  }
+  p{
+    padding:20px;
+    background:lightblue;
+    height:150px;
+    outline:none;
+    border-radius:6px;
+    
+  }
+  .container .span{
+    float:right;
+    cursor:pointer;
+    padding:10px 10px 10px;
+    background:red;
+    color:white;
+    border-radius:6px;
+  }
+  </style>
+</head>
+<body>
+  <header>
+    <button class="button1 act-btn" onclick="akh('todo', this)">To-Do List</button>
+    <button class="button1 " onclick="akh('note', this)">Note App</button>
+  </header>
+  <div class="container con active" id="todo">
+    <h1>📝 To-Do List </h1>
+    <div class="input">
+      <input type="text" id="input">
+      <button id="btn" class="button">Add Task</button>
+    </div>
+    <ul id="list">
+      <li class="done">list 1<span>x</span> </li>
+      <li>list 2 <span>x</span></li>
+      <li>list 3<span>x</span></li>
+    </ul>
+  </div>
+  
+  
+  <div class="con " id="note">
+    <button id="create" onclick="crt()">create note</button>
+    <div class="container" id="container">
+      <p contenteditable="true">--></p>
+      <span class="span" >delete</span>
+    </div>
+  </div>
+  
+  
+  <script>
+  const button = document.getElementById("btn");
+  const input = document.getElementById("input");
+  const list = document.getElementById("list");
+  const createBtn = document.getElementById("create");
+  const cntyner = document.getElementById("note");
+  
+  function akh(sec, btn){
+    const hide = document.querySelectorAll(".con");
+    hide.forEach(cont => cont.classList.remove("active"));
+    const show = document.getElementById(sec);
+    show.classList.add("active");
+    
+    const buttons = document.querySelectorAll(".button1");
+    buttons.forEach(b => b.classList.remove("act-btn"));
+    btn.classList.add("act-btn");
+  }
+  button.addEventListener("click", function(){
+    if(input.value === ""){
+      alert('wax gali');
+    }else{
+      const li = document.createElement("li");
+      li.innerHTML = input.value;
+      list.appendChild(li);
+      const span = document.createElement("span");
+      span.innerHTML = "x";
+      li.appendChild(span);
+    }
+    input.value = "";
+    save();
+  });
+  list.addEventListener("click", function(e){
+    if(e.target.tagName === "LI"){
+      e.target.classList.toggle("done");
+      save();
+    }
+    else if(e.target.tagName === "SPAN"){
+      e.target.parentElement.remove();
+    }
+    save();
+  });
+  
+  function save(){
+    localStorage.setItem("data", list.innerHTML);
+  }
+  function show(){
+    list.innerHTML = localStorage.getItem("data");
+  }
+  show();
+  
+  function crt(){
+    const div = document.createElement("div");
+    div.className = "container";
+    const p = document.createElement("p");
+    p.innerHTML = "-->";
+    p.setAttribute("contenteditable", "true");
+    const span = document.createElement("span");
+    span.innerHTML = "delete";
+    span.className = "span";
+    cntyner.appendChild(div).appendChild(p);
+    div.appendChild(span);
+  }
+  </script>
+</body>
+</html>
